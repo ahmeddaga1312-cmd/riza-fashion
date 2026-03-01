@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Riza Fashion Boutique</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Montserrat:wght@400;600&display=swap" rel="stylesheet">
+<style>
+:root {
+  --dark-navy:#0d1b2a;
+  --rose-gold:#b76e79;
+  --lavender:#c8a2c8;
+  --white:#ffffff;
+}
+*{margin:0;padding:0;box-sizing:border-box;font-family:'Montserrat',sans-serif;}
+body{background-color:var(--dark-navy);color:var(--white);line-height:1.6;transition:0.3s;}
+a{text-decoration:none;color:inherit;}
+img{max-width:100%;display:block;}
+header{display:flex;justify-content:space-between;align-items:center;padding:20px 50px;background-color:var(--dark-navy);border-bottom:1px solid var(--rose-gold);}
+.logo{font-family:'Playfair Display',serif;font-size:28px;color:var(--rose-gold);font-weight:700;}
+nav ul{display:flex;list-style:none;gap:30px;}
+nav ul li a{font-weight:600;transition:color 0.3s;}
+nav ul li a:hover{color:var(--lavender);}
+.products, .checkout{padding:60px 50px;text-align:center;}
+.products h2, .checkout h2{font-family:'Playfair Display', serif;font-size:40px;color:var(--rose-gold);margin-bottom:40px;}
+.product-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:30px;}
+.product-card{background-color:#14263c;border-radius:10px;overflow:hidden;transition:transform 0.3s, box-shadow 0.3s;}
+.product-card:hover{transform:translateY(-10px);box-shadow:0 10px 20px rgba(183,110,121,0.5);}
+.product-card img{width:100%;height:300px;object-fit:cover;}
+.product-info{padding:15px;}
+.product-info h3{color:var(--lavender);margin-bottom:10px;}
+.product-info p{color:var(--white);margin-bottom:15px;}
+.product-info button{background-color:var(--rose-gold);padding:10px 20px;font-size:14px;border:none;cursor:pointer;transition:all 0.3s;}
+.product-info button:hover{background-color:var(--lavender);color:var(--dark-navy);}
+.checkout form{max-width:600px;margin:0 auto;display:flex;flex-direction:column;gap:15px;}
+.checkout input{padding:10px;border-radius:5px;border:none;font-size:16px;}
+.checkout table{width:100%;border-collapse:collapse;margin-bottom:20px;}
+.checkout th, .checkout td{padding:12px;border-bottom:1px solid var(--lavender);text-align:center;}
+.checkout button{padding:12px 20px;background-color:var(--rose-gold);border:none;color:var(--white);cursor:pointer;transition:all 0.3s;font-weight:600;}
+.checkout button:hover{background-color:var(--lavender);color:var(--dark-navy);}
+footer{background-color:#0a1220;padding:30px 50px;text-align:center;border-top:1px solid var(--rose-gold);}
+footer p{color:var(--white);}
+footer a{color:var(--rose-gold);margin:0 10px;transition:color 0.3s;}
+footer a:hover{color:var(--lavender);}
+#languageSelector{padding:5px;border-radius:5px;border:none;font-weight:600;cursor:pointer;}
+@media(max-width:768px){header{flex-direction:column;gap:15px;}.product-card img{height:250px;}}
+</style>
+</head>
+<body>
+
+<header>
+<div class="logo">Riza</div>
+<nav>
+<ul>
+<li><a href="#products" id="navProducts">Our Products</a></li>
+<li><a href="#checkout" id="navCheckout">Checkout</a></li>
+</ul>
+<select id="languageSelector">
+  <option value="en">English</option>
+  <option value="ar">العربية</option>
+</select>
+</header>
+
+<section class="products" id="products">
+<h2 id="productsTitle">Our Products</h2>
+<div class="product-grid">
+  <div class="product-card" data-name="Elegant Dress" data-price="120">
+    <img src="https://images.unsplash.com/photo-1520975698513-1b7b8f3dfc36?auto=format&fit=crop&w=500&q=80" alt="Elegant Dress">
+    <div class="product-info">
+      <h3>Elegant Dress</h3>
+      <p>$120</p>
+      <button onclick="addToCart('Elegant Dress',120)" class="addBtn">Add to Cart</button>
+    </div>
+  </div>
+  <div class="product-card" data-name="Classic Blazer" data-price="150">
+    <img src="https://images.unsplash.com/photo-1593032465172-0918f6b78c97?auto=format&fit=crop&w=500&q=80" alt="Classic Blazer">
+    <div class="product-info">
+      <h3>Classic Blazer</h3>
+      <p>$150</p>
+      <button onclick="addToCart('Classic Blazer',150)" class="addBtn">Add to Cart</button>
+    </div>
+  </div>
+  <div class="product-card" data-name="Stylish Jacket" data-price="180">
+    <img src="https://images.unsplash.com/photo-1593032464842-f0e4f531f0d0?auto=format&fit=crop&w=500&q=80" alt="Stylish Jacket">
+    <div class="product-info">
+      <h3>Stylish Jacket</h3>
+      <p>$180</p>
+      <button onclick="addToCart('Stylish Jacket',180)" class="addBtn">Add to Cart</button>
+    </div>
+  </div>
+</div>
+</section>
+
+<section class="checkout" id="checkout">
+<h2 id="checkoutTitle">Checkout</h2>
+<table id="cartTable">
+  <thead>
+    <tr>
+      <th>Product</th>
+      <th>Price</th>
+      <th>Qty</th>
+      <th>Action</th>
+    </tr>
+  </thead>
+  <tbody></tbody>
+</table>
+
+<p id="totalPrice">Total: $0</p>
+
+<form id="checkoutForm">
+  <input type="text" id="custName" placeholder="Full Name" required>
+  <input type="text" id="custPhone" placeholder="Phone Number" required>
+  <input type="text" id="custAddress" placeholder="Address" required>
+  <button type="submit" id="placeOrderBtn">Place Order on WhatsApp</button>
+</form>
+</section>
+
+<footer>
+<p>© 2026 Riza Fashion Boutique | 
+<a href="#">Instagram</a> | 
+<a href="#">WhatsApp</a> | 
+<a href="#">Email</a>
+</p>
+</footer>
+
+<script>
+let cart = [];
+
+const texts = {
+  en: {
+    productsTitle: "Our Products",
+    checkoutTitle: "Checkout",
+    namePlaceholder: "Full Name",
+    phonePlaceholder: "Phone Number",
+    addressPlaceholder: "Address",
+    placeOrder: "Place Order on WhatsApp",
+    cartEmpty: "Your cart is empty!"
+  },
+  ar: {
+    productsTitle: "منتجاتنا",
+    checkoutTitle: "الدفع",
+    namePlaceholder: "الاسم الكامل",
+    phonePlaceholder: "رقم الهاتف",
+    addressPlaceholder: "العنوان",
+    placeOrder: "إرسال الطلب عبر واتساب",
+    cartEmpty: "السلة فارغة!"
+  }
+};
+
+// Language switcher
+const languageSelector = document.getElementById("languageSelector");
+languageSelector.addEventListener("change", () => {
+  const lang = languageSelector.value;
+  document.body.style.direction = (lang==="ar")?"rtl":"ltr";
+  document.getElementById("productsTitle").innerText = texts[lang].productsTitle;
+  document.getElementById("checkoutTitle").innerText = texts[lang].checkoutTitle;
+  document.getElementById("custName").placeholder = texts[lang].namePlaceholder;
+  document.getElementById("custPhone").placeholder = texts[lang].phonePlaceholder;
+  document.getElementById("custAddress").placeholder = texts[lang].addressPlaceholder;
+  document.getElementById("placeOrderBtn").innerText = texts[lang].placeOrder;
+});
+
+function addToCart(name, price){
+  const exists = cart.find(item=>item.name===name);
+  if(exists) exists.qty +=1;
+  else cart.push({name, price, qty:1});
+  renderCart();
+}
+
+function renderCart(){
+  const tbody = document.querySelector("#cartTable tbody");
+  tbody.innerHTML = "";
+  let total = 0;
+  cart.forEach((item,index)=>{
+    total += item.price * item.qty;
+    const row = document.createElement("tr");
+    row.innerHTML = `
+      <td>${item.name}</td>
+      <td>$${item.price}</td>
+      <td>
+        <button onclick="changeQty(${index},-1)">-</button>
+        ${item.qty}
+        <button onclick="changeQty(${index},1)">+</button>
+      </td>
+      <td><button onclick="removeItem(${index})">Delete</button></td>
+    `;
+    tbody.appendChild(row);
+  });
+  document.getElementById("totalPrice").innerText = `Total: $${total}`;
+}
+
+function changeQty(index,delta){
+  cart[index].qty += delta;
+  if(cart[index].qty<1) cart[index].qty =1;
+  renderCart();
+}
+
+function removeItem(index){
+  cart.splice(index,1);
+  renderCart();
+}
+
+document.getElementById('checkoutForm').addEventListener('submit', function(e){
+  e.preventDefault();
+  if(cart.length===0){ alert(texts[languageSelector.value].cartEmpty); return;}
+  const name = document.getElementById('custName').value;
+  const phone = document.getElementById('custPhone').value;
+  const address = document.getElementById('custAddress').value;
+  let message = `New Order from Riza Fashion Boutique:\nName: ${name}\nPhone: ${phone}\nAddress: ${address}\n\nProducts:\n`;
+  let total = 0;
+  cart.forEach(item=>{
+    message += `${item.name} x${item.qty} - $${item.price*item.qty}\n`;
+    total += item.price*item.qty;
+  });
+  message += `\nTotal: $${total}`;
+  const whatsappNumber = "201000000000"; // ضع رقمك هنا بصيغة دولية +20...
+  const whatsappLink = `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(message)}`;
+  window.open(whatsappLink,"_blank");
+});
+</script>
+
+</body>
+</html>
