@@ -19,7 +19,7 @@ img{max-width:100%;display:block;}
 header{display:flex;justify-content:space-between;align-items:center;padding:20px 50px;background-color:var(--dark-navy);border-bottom:1px solid var(--rose-gold);}
 .logo{font-family:'Playfair Display',serif;font-size:28px;color:var(--rose-gold);font-weight:700;}
 nav ul{display:flex;list-style:none;gap:30px;}
-nav ul li a{font-weight:600;transition:color 0.3s;}
+nav ul li a{font-weight:600;transition:color 0.3s;cursor:pointer;}
 nav ul li a:hover{color:var(--lavender);}
 .products, .checkout{padding:60px 50px;text-align:center;}
 .products h2, .checkout h2{font-family:'Playfair Display', serif;font-size:40px;color:var(--rose-gold);margin-bottom:40px;}
@@ -43,7 +43,16 @@ footer p{color:var(--white);}
 footer a{color:var(--rose-gold);margin:0 10px;transition:color 0.3s;}
 footer a:hover{color:var(--lavender);}
 #languageSelector{padding:5px;border-radius:5px;border:none;font-weight:600;cursor:pointer;}
-@media(max-width:768px){header{flex-direction:column;gap:15px;}.product-card img{height:250px;}}
+/* Admin Modal */
+#adminModal{display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.8);justify-content:center;align-items:center;z-index:1000;}
+#adminContent{background:var(--dark-navy);padding:30px;border-radius:10px;max-width:500px;width:90%;text-align:center;position:relative;}
+#adminContent input{width:80%;margin:10px 0;padding:10px;border-radius:5px;border:none;}
+#adminContent button{padding:10px 20px;border:none;border-radius:5px;background:var(--rose-gold);color:white;cursor:pointer;margin-top:10px;}
+#adminContent button:hover{background:var(--lavender);color:var(--dark-navy);}
+#closeAdmin{position:absolute;top:10px;right:15px;cursor:pointer;color:var(--rose-gold);font-size:20px;}
+#adminDashboard{margin-top:20px;display:none;}
+#adminDashboard table{width:100%;border-collapse:collapse;margin-top:20px;}
+#adminDashboard th, #adminDashboard td{padding:10px;border:1px solid var(--lavender);text-align:center;}
 </style>
 </head>
 <body>
@@ -52,68 +61,69 @@ footer a:hover{color:var(--lavender);}
 <div class="logo">Riza</div>
 <nav>
 <ul>
-<li><a href="#products" id="navProducts">Our Products</a></li>
-<li><a href="#checkout" id="navCheckout">Checkout</a></li>
+<li><a href="#products">Our Products</a></li>
+<li><a href="#checkout">Checkout</a></li>
+<li><a id="adminBtn">Admin</a></li>
 </ul>
 <select id="languageSelector">
   <option value="en">English</option>
   <option value="ar">العربية</option>
 </select>
+</nav>
 </header>
 
 <section class="products" id="products">
 <h2 id="productsTitle">Our Products</h2>
-<div class="product-grid">
-  <div class="product-card" data-name="Elegant Dress" data-price="120">
-    <img src="https://images.unsplash.com/photo-1520975698513-1b7b8f3dfc36?auto=format&fit=crop&w=500&q=80" alt="Elegant Dress">
-    <div class="product-info">
-      <h3>Elegant Dress</h3>
-      <p>$120</p>
-      <button onclick="addToCart('Elegant Dress',120)" class="addBtn">Add to Cart</button>
-    </div>
-  </div>
-  <div class="product-card" data-name="Classic Blazer" data-price="150">
-    <img src="https://images.unsplash.com/photo-1593032465172-0918f6b78c97?auto=format&fit=crop&w=500&q=80" alt="Classic Blazer">
-    <div class="product-info">
-      <h3>Classic Blazer</h3>
-      <p>$150</p>
-      <button onclick="addToCart('Classic Blazer',150)" class="addBtn">Add to Cart</button>
-    </div>
-  </div>
-  <div class="product-card" data-name="Stylish Jacket" data-price="180">
-    <img src="https://images.unsplash.com/photo-1593032464842-f0e4f531f0d0?auto=format&fit=crop&w=500&q=80" alt="Stylish Jacket">
-    <div class="product-info">
-      <h3>Stylish Jacket</h3>
-      <p>$180</p>
-      <button onclick="addToCart('Stylish Jacket',180)" class="addBtn">Add to Cart</button>
-    </div>
-  </div>
-</div>
+<div class="product-grid" id="productGrid"></div>
 </section>
 
 <section class="checkout" id="checkout">
 <h2 id="checkoutTitle">Checkout</h2>
 <table id="cartTable">
-  <thead>
-    <tr>
-      <th>Product</th>
-      <th>Price</th>
-      <th>Qty</th>
-      <th>Action</th>
-    </tr>
-  </thead>
-  <tbody></tbody>
+<thead>
+<tr>
+<th>Product</th>
+<th>Price</th>
+<th>Qty</th>
+<th>Action</th>
+</tr>
+</thead>
+<tbody></tbody>
 </table>
-
 <p id="totalPrice">Total: $0</p>
-
 <form id="checkoutForm">
-  <input type="text" id="custName" placeholder="Full Name" required>
-  <input type="text" id="custPhone" placeholder="Phone Number" required>
-  <input type="text" id="custAddress" placeholder="Address" required>
-  <button type="submit" id="placeOrderBtn">Place Order on WhatsApp</button>
+<input type="text" id="custName" placeholder="Full Name" required>
+<input type="text" id="custPhone" placeholder="Phone Number" required>
+<input type="text" id="custAddress" placeholder="Address" required>
+<button type="submit" id="placeOrderBtn">Place Order on WhatsApp</button>
 </form>
 </section>
+
+<!-- Admin Modal -->
+<div id="adminModal">
+  <div id="adminContent">
+    <span id="closeAdmin">&times;</span>
+    <h2>Admin Login</h2>
+    <form id="loginForm">
+      <input type="text" id="adminUser" placeholder="Username" required>
+      <input type="password" id="adminPass" placeholder="Password" required>
+      <button type="submit">Login</button>
+    </form>
+    <p id="loginMsg" style="color:red;"></p>
+    <section id="adminDashboard">
+      <h3>Add Product</h3>
+      <input type="text" id="newName" placeholder="Product Name">
+      <input type="number" id="newPrice" placeholder="Price">
+      <input type="text" id="newImage" placeholder="Image URL">
+      <button id="addProductBtn">Add</button>
+      <h3>Products</h3>
+      <table id="adminProductTable">
+        <thead><tr><th>Name</th><th>Price</th><th>Image</th><th>Action</th></tr></thead>
+        <tbody></tbody>
+      </table>
+    </section>
+  </div>
+</div>
 
 <footer>
 <p>© 2026 Riza Fashion Boutique | 
@@ -124,99 +134,124 @@ footer a:hover{color:var(--lavender);}
 </footer>
 
 <script>
+// Products & Cart
+let products = [
+{name:"Elegant Dress", price:120, img:"https://images.unsplash.com/photo-1520975698513-1b7b8f3dfc36?auto=format&fit=crop&w=500&q=80"},
+{name:"Classic Blazer", price:150, img:"https://images.unsplash.com/photo-1593032465172-0918f6b78c97?auto=format&fit=crop&w=500&q=80"},
+{name:"Stylish Jacket", price:180, img:"https://images.unsplash.com/photo-1593032464842-f0e4f531f0d0?auto=format&fit=crop&w=500&q=80"}
+];
 let cart = [];
+function renderProducts(){
+  const grid = document.getElementById("productGrid");
+  grid.innerHTML = "";
+  products.forEach((p,i)=>{
+    const card = document.createElement("div");
+    card.className = "product-card";
+    card.innerHTML = `<img src="${p.img}" alt="${p.name}"><div class="product-info"><h3>${p.name}</h3><p>$${p.price}</p><button onclick="addToCart(${i})">Add to Cart</button></div>`;
+    grid.appendChild(card);
+  });
+}
+renderProducts();
 
-const texts = {
-  en: {
-    productsTitle: "Our Products",
-    checkoutTitle: "Checkout",
-    namePlaceholder: "Full Name",
-    phonePlaceholder: "Phone Number",
-    addressPlaceholder: "Address",
-    placeOrder: "Place Order on WhatsApp",
-    cartEmpty: "Your cart is empty!"
-  },
-  ar: {
-    productsTitle: "منتجاتنا",
-    checkoutTitle: "الدفع",
-    namePlaceholder: "الاسم الكامل",
-    phonePlaceholder: "رقم الهاتف",
-    addressPlaceholder: "العنوان",
-    placeOrder: "إرسال الطلب عبر واتساب",
-    cartEmpty: "السلة فارغة!"
-  }
-};
-
-// Language switcher
-const languageSelector = document.getElementById("languageSelector");
-languageSelector.addEventListener("change", () => {
-  const lang = languageSelector.value;
-  document.body.style.direction = (lang==="ar")?"rtl":"ltr";
-  document.getElementById("productsTitle").innerText = texts[lang].productsTitle;
-  document.getElementById("checkoutTitle").innerText = texts[lang].checkoutTitle;
-  document.getElementById("custName").placeholder = texts[lang].namePlaceholder;
-  document.getElementById("custPhone").placeholder = texts[lang].phonePlaceholder;
-  document.getElementById("custAddress").placeholder = texts[lang].addressPlaceholder;
-  document.getElementById("placeOrderBtn").innerText = texts[lang].placeOrder;
-});
-
-function addToCart(name, price){
-  const exists = cart.find(item=>item.name===name);
-  if(exists) exists.qty +=1;
-  else cart.push({name, price, qty:1});
+function addToCart(i){
+  const p=products[i];
+  const exists=cart.find(item=>item.name===p.name);
+  if(exists) exists.qty+=1; else cart.push({name:p.name, price:p.price, qty:1});
   renderCart();
 }
-
 function renderCart(){
-  const tbody = document.querySelector("#cartTable tbody");
-  tbody.innerHTML = "";
-  let total = 0;
+  const tbody=document.querySelector("#cartTable tbody");
+  tbody.innerHTML="";
+  let total=0;
   cart.forEach((item,index)=>{
-    total += item.price * item.qty;
-    const row = document.createElement("tr");
-    row.innerHTML = `
-      <td>${item.name}</td>
-      <td>$${item.price}</td>
-      <td>
-        <button onclick="changeQty(${index},-1)">-</button>
-        ${item.qty}
-        <button onclick="changeQty(${index},1)">+</button>
-      </td>
-      <td><button onclick="removeItem(${index})">Delete</button></td>
-    `;
+    total+=item.price*item.qty;
+    const row=document.createElement("tr");
+    row.innerHTML=`<td>${item.name}</td><td>$${item.price}</td><td><button onclick="changeQty(${index},-1)">-</button>${item.qty}<button onclick="changeQty(${index},1)">+</button></td><td><button onclick="removeItem(${index})">Delete</button></td>`;
     tbody.appendChild(row);
   });
-  document.getElementById("totalPrice").innerText = `Total: $${total}`;
+  document.getElementById("totalPrice").innerText=`Total: $${total}`;
 }
+function changeQty(i,d){cart[i].qty+=d;if(cart[i].qty<1)cart[i].qty=1;renderCart();}
+function removeItem(i){cart.splice(i,1);renderCart();}
 
-function changeQty(index,delta){
-  cart[index].qty += delta;
-  if(cart[index].qty<1) cart[index].qty =1;
-  renderCart();
-}
-
-function removeItem(index){
-  cart.splice(index,1);
-  renderCart();
-}
-
-document.getElementById('checkoutForm').addEventListener('submit', function(e){
+// Checkout
+document.getElementById('checkoutForm').addEventListener('submit',function(e){
   e.preventDefault();
-  if(cart.length===0){ alert(texts[languageSelector.value].cartEmpty); return;}
-  const name = document.getElementById('custName').value;
-  const phone = document.getElementById('custPhone').value;
-  const address = document.getElementById('custAddress').value;
-  let message = `New Order from Riza Fashion Boutique:\nName: ${name}\nPhone: ${phone}\nAddress: ${address}\n\nProducts:\n`;
-  let total = 0;
-  cart.forEach(item=>{
-    message += `${item.name} x${item.qty} - $${item.price*item.qty}\n`;
-    total += item.price*item.qty;
-  });
-  message += `\nTotal: $${total}`;
-  const whatsappNumber = "201000000000"; // ضع رقمك هنا بصيغة دولية +20...
-  const whatsappLink = `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(message)}`;
+  if(cart.length===0){alert("Cart is empty!");return;}
+  const name=document.getElementById('custName').value;
+  const phone=document.getElementById('custPhone').value;
+  const address=document.getElementById('custAddress').value;
+  let message=`New Order from Riza Fashion Boutique:\nName: ${name}\nPhone: ${phone}\nAddress: ${address}\nProducts:\n`;
+  let total=0;
+  cart.forEach(item=>{message+=`${item.name} x${item.qty} - $${item.price*item.qty}\n`;total+=item.price*item.qty;});
+  message+=`\nTotal: $${total}`;
+  const whatsappNumber="201019515456"; // ضع رقمك هنا
+  const whatsappLink=`https://wa.me/${whatsappNumber}?text=${encodeURIComponent(message)}`;
   window.open(whatsappLink,"_blank");
 });
+
+// Language
+const texts={
+en:{productsTitle:"Our Products", checkoutTitle:"Checkout", namePlaceholder:"Full Name", phonePlaceholder:"Phone Number", addressPlaceholder:"Address", placeOrder:"Place Order on WhatsApp"},
+ar:{productsTitle:"منتجاتنا", checkoutTitle:"الدفع", namePlaceholder:"الاسم الكامل", phonePlaceholder:"رقم الهاتف", addressPlaceholder:"العنوان", placeOrder:"إرسال الطلب عبر واتساب"}
+};
+document.getElementById("languageSelector").addEventListener("change",()=>{
+  const lang=document.getElementById("languageSelector").value;
+  document.body.style.direction=(lang==="ar")?"rtl":"ltr";
+  document.getElementById("productsTitle").innerText=texts[lang].productsTitle;
+  document.getElementById("checkoutTitle").innerText=texts[lang].checkoutTitle;
+  document.getElementById("custName").placeholder=texts[lang].namePlaceholder;
+  document.getElementById("custPhone").placeholder=texts[lang].phonePlaceholder;
+  document.getElementById("custAddress").placeholder=texts[lang].addressPlaceholder;
+  document.getElementById("placeOrderBtn").innerText=texts[lang].placeOrder;
+});
+
+// Admin
+const adminCredentials={username:"shrouk.99", password:"shosho.99"};
+const adminModal=document.getElementById("adminModal");
+const adminBtn=document.getElementById("adminBtn");
+const closeAdmin=document.getElementById("closeAdmin");
+const loginForm=document.getElementById("loginForm");
+const adminDashboard=document.getElementById("adminDashboard");
+const addBtn=document.getElementById("addProductBtn");
+const adminTable=document.getElementById("adminProductTable").querySelector("tbody");
+
+adminBtn.addEventListener("click",()=>{adminModal.style.display="flex";});
+closeAdmin.addEventListener("click",()=>{adminModal.style.display="none";});
+window.addEventListener("click",(e)=>{if(e.target===adminModal) adminModal.style.display="none";});
+
+loginForm.addEventListener("submit",(e)=>{
+  e.preventDefault();
+  const user=document.getElementById("adminUser").value;
+  const pass=document.getElementById("adminPass").value;
+  if(user===adminCredentials.username && pass===adminCredentials.password){
+    loginForm.style.display="none";
+    document.getElementById("loginMsg").style.display="none";
+    adminDashboard.style.display="block";
+    renderAdminProducts();
+  } else document.getElementById("loginMsg").innerText="Invalid username or password!";
+});
+
+function renderAdminProducts(){
+  adminTable.innerHTML="";
+  products.forEach((p,i)=>{
+    const row=document.createElement("tr");
+    row.innerHTML=`<td>${p.name}</td><td>$${p.price}</td><td><img src="${p.img}" width="50"></td><td><button onclick="deleteAdminProduct(${i})">Delete</button></td>`;
+    adminTable.appendChild(row);
+  });
+}
+
+addBtn.addEventListener("click",()=>{
+  const name=document.getElementById("newName").value;
+  const price=parseFloat(document.getElementById("newPrice").value);
+  const img=document.getElementById("newImage").value;
+  if(name && !isNaN(price) && img){products.push({name,price,img}); renderProducts(); renderAdminProducts();}
+  document.getElementById("newName").value="";
+  document.getElementById("newPrice").value="";
+  document.getElementById("newImage").value="";
+});
+
+function deleteAdminProduct(i){products.splice(i,1);renderProducts();renderAdminProducts();}
 </script>
 
 </body>
